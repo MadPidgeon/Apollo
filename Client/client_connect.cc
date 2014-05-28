@@ -57,7 +57,7 @@ void chat_client::handle_read_body(const boost::system::error_code& error) {
         if( read_msg_.body_length() == 3 ) {
             //cout << (int) read_msg_.body()[0] << "," << (int) read_msg_.body()[1] << "," << (int) read_msg_.body()[2] << endl;
             vector<uint8_t> mmes( read_msg_.body(), read_msg_.body()+3 );
-            boost::thread r( boost::bind( messageReactor, boost::ref( &mmes ) );
+            boost::thread r( boost::bind( messageReactor,  &mmes ) );
         } else {
             cout.write(read_msg_.body(), read_msg_.body_length());
             std::cout << "\n";
