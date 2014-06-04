@@ -51,8 +51,8 @@ public:
   {
     cout << "Someone joined the room!" << endl;
     participants_.insert(participant);
-    for( auto itr = recent_msgs_.begin(); itr != recent_msgs_.end(); ++itr )
-      participant->deliver( *itr, chat_participant_ptr() );
+    //for( auto itr = recent_msgs_.begin(); itr != recent_msgs_.end(); ++itr )
+    //  participant->deliver( *itr, chat_participant_ptr() );
   }
 
   void leave(chat_participant_ptr participant)
