@@ -1,4 +1,17 @@
-GFLAG = -Wall -Wextra -pedantic -lboost_system -std=c++0x
+UNAME := $(shell uname)
+CXXFLAGS = -Wall -Wextra -pedantic -lboost_system -std=c++0x -lboost_thread -lrtmidi -lpthread
+ifeq ($(OS),Windows_NT)
+	CXX = i686-w64-mingw32-g++
+	CXXFLAGS += -lasound -static-libstdc++ -static-libgcc -I/usr/include -B/usr/lib
+else
+	ifeq ($(UNAME), Darwin)
+		CXX = clang++
+		CXXFLAGS += -framework CoreMIDI
+	else #linux?
+		CXX = g++
+		CXXFLAGS += -lrtmidi -lpthread -lasound
+	endif
+endif
 
 all: user
 
@@ -6,13 +19,8 @@ subsystem:
 	cd ./../Client && $(MAKE)
 
 user: subsystem midi_input.o
-	g++ -o ./../Binaries/user chat_user.cc ./../Client/client_connect.o midi_input.o ./../Client/RtMidiChoose.o $(GFLAG) -lrtmidi -lpthread -lboost_thread -lasound 
-
-windowsUser: subsystem midi_input.o
-	i686-w64-mingw32-g++ -o ./../Binaries/windowsUser.exe chat_user.cc ./../Client/client_connect.o midi_input.o ./../Client/RtMidiChoose.o $(GFLAG) -lrtmidi -lpthread -lboost_thread -lasound -static-libstdc++ -static-libgcc -I/usr/include -B/usr/lib
-
-osxUser: subsystem midi_input.o
-	clang++ -o ./../Binaries/user chat_user.cc ./../Client/client_connect.o midi_input.o ./../Client/RtMidiChoose.o $(GFLAG) -lrtmidi -lpthread -lboost_thread -framework CoreMIDI
+	mkdir -p ../Binaries
+	$(CXX) -o ./../Binaries/user chat_user.cc ./../Client/client_connect.o midi_input.o ./../Client/RtMidiChoose.o $(CXXFLAGS)
 
 midi_input.o:
-	g++ -c midi_input.cc $(GFLAG)
+	$(CXX) -c midi_input.cc $(CXXFLAGS)
