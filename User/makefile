@@ -1,10 +1,13 @@
 GFLAG = -Wall -Wextra -pedantic -lboost_system -std=c++0x
 
-user: midi cconnect
-	g++ -o ./../Binaries/user chat_user.cc ./../Client/client_connect.o midi_input.o ./../../MIDI/rtmidi-2.1.0/RtMidi.o ./../../MIDI/rtmidi-2.1.0/RtMidiChoose.o $(GFLAG) -lpthread -lboost_thread -lasound 
+subsystem:
+	cd ./../Client && $(MAKE)
 
-midi:
+user: subsystem
+	g++ -o ./../Binaries/user chat_user.cc ./../Client/client_connect.o midi_input.o ./../Client/RtMidiChoose.o $(GFLAG) -lrtmidi -lpthread -lboost_thread -lasound 
+
+windowsUser: subsystem
+	i686-w64-mingw32-g++ -o ./../Binaries/windowsUser.exe chat_user.cc ./../Client/client_connect.o midi_input.o ./../Client/RtMidiChoose.o $(GFLAG) -lrtmidi -lpthread -lboost_thread -lasound -static-libstdc++ -static-libgcc -I/usr/include -B/usr/lib
+
+midi_input.o:
 	g++ -c midi_input.cc $(GFLAG)
-
-cconnect:
-	g++ -c ./../Client/client_connect.cc -o ./../Client/client_connect.o $(GFLAG)
