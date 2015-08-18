@@ -4,8 +4,8 @@
 #include <set>
 #include <cstdint>
 #include <boost/function.hpp>
-#include "./../../MIDI/rtmidi-2.1.0/RtMidi.h"
-#include "./../../MIDI/rtmidi-2.1.0/RtMidiChoose.h"
+#include <RtMidi.h>
+#include "./../Client/RtMidiChoose.h"
 #include "midi_input.h"
 
 using namespace std;
